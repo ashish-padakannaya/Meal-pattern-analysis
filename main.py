@@ -1,7 +1,8 @@
 import pandas as pd
 from configparser import ConfigParser
 import ast
-from DM_dummy.helper import convert_to_epoch, getFloatFromObject
+from helper import convert_to_epoch, getFloatFromObject
+from features import get_fft
 import os
 import numpy as np
 
@@ -44,3 +45,6 @@ def getDataFrame():
     patient_df.to_csv('test.csv', index=False)
 
     return patient_df
+
+test = getDataFrame()
+get_fft(test).to_csv('fft.csv', index=False)
