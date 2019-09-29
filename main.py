@@ -1,7 +1,9 @@
 import pandas as pd
 from configparser import ConfigParser
 import ast
-from helper import convert_to_epoch
+from DM_dummy.helper import convert_to_epoch, getFloatFromObject
+import os
+import numpy as np
 
 #read config file and get patient data sources
 k = ConfigParser()
@@ -13,8 +15,10 @@ patient_df = pd.DataFrame()
 for patient_number, files in file_map.items():
 
     #read dataframes and convert each row to numpy arrays
-    time_frame = pd.read_csv(directory + files['time_series'], na_filter=False)
-    cgm_frame = pd.read_csv(directory + files['data'], na_filter=False)
+    time_series_path = os.path.join(directory, files['time_series'])
+    time_frame = pd.read_csv(time_series_path, na_filter=False)
+    data_path = os.path.join(directory, files['data'])
+    cgm_frame = pd.read_csv(data_path, na_filter=False)
     time_frame_array = time_frame.to_numpy()
     cgm_frame_array = cgm_frame.to_numpy()
 
@@ -22,9 +26,12 @@ for patient_number, files in file_map.items():
     #zip([a1,a2],[b1,b2]) = [(a1,b1), (a2,b2)]
     #enumerate fetches index for each element in zip list.
     for index, (cgm_data,time_data) in enumerate(zip(cgm_frame_array, time_frame_array)):
+        print("{}_{}".format(patient_number, index))
+        time_data = getFloatFromObject(time_data)
+        cgm_data = getFloatFromObject(cgm_data)
         meal_data_frame = pd.DataFrame({
-            'meal_number': index,
             'patient_number': int(patient_number[-1]),
+            'meal_number': index,
             'cgm_data': cgm_data,
             'time_data': time_data
         })
