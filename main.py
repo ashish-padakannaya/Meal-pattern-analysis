@@ -21,7 +21,6 @@ def getDataFrame():
         cgm_frame = pd.read_csv(data_path, na_filter=False)
         time_frame_array = time_frame.to_numpy()
         cgm_frame_array = cgm_frame.to_numpy()
-        print(time_frame_array.shape)
         patientMealCountMap[patient_number] = time_frame_array.shape[0]
 
         #zip functions joins each ith element of 2 arrays together:
@@ -41,6 +40,6 @@ def getDataFrame():
 
     #convert timeseries to python datetime and save to CSV *check output
     patient_df['time_data'] = patient_df['time_data'].apply(lambda cell: convert_to_epoch(cell))
-    patient_df.to_csv('test.csv', index=False)
+    # patient_df.to_csv('test.csv', index=False)
 
     return patient_df
