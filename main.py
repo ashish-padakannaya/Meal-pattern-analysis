@@ -1,13 +1,8 @@
 import pandas as pd
 from configparser import ConfigParser
 import ast
-<<<<<<< HEAD
-from DM_dummy.helper  import convert_to_epoch, getFloatFromObject
-from DM_dummy.features import get_fft
-=======
 from helper import convert_to_epoch, getFloatFromObject
 from features import get_fft, get_sd, get_rms
->>>>>>> master
 import os
 import numpy as np
 from tsfresh.feature_extraction.feature_calculators import standard_deviation
