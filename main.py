@@ -1,10 +1,16 @@
 import pandas as pd
 from configparser import ConfigParser
 import ast
+<<<<<<< HEAD
 from DM_dummy.helper  import convert_to_epoch, getFloatFromObject
 from DM_dummy.features import get_fft
+=======
+from helper import convert_to_epoch, getFloatFromObject
+from features import get_fft, get_sd, get_rms
+>>>>>>> master
 import os
 import numpy as np
+from tsfresh.feature_extraction.feature_calculators import standard_deviation
 
 def getDataFrame():
     #read config file and get patient data sources
@@ -12,17 +18,17 @@ def getDataFrame():
     k.read('config.ini')
     file_map = ast.literal_eval(k['FILES']['CGM_files'])
     directory = k['FILES']['data_directory']
-    patientMealCountMap = {}
     patient_df = pd.DataFrame()
+
     for patient_number, files in file_map.items():
         #read dataframes and convert each row to numpy arrays
         time_series_path = os.path.join(directory, files['time_series'])
         time_frame = pd.read_csv(time_series_path, na_filter=False)
+        time_frame_array = time_frame.to_numpy()
+
         data_path = os.path.join(directory, files['data'])
         cgm_frame = pd.read_csv(data_path, na_filter=False)
-        time_frame_array = time_frame.to_numpy()
         cgm_frame_array = cgm_frame.to_numpy()
-        patientMealCountMap[patient_number] = time_frame_array.shape[0]
 
         #zip functions joins each ith element of 2 arrays together:
         #zip([a1,a2],[b1,b2]) = [(a1,b1), (a2,b2)]
@@ -45,5 +51,15 @@ def getDataFrame():
 
     return patient_df
 
-test = getDataFrame()
-get_fft(test).to_csv('fft.csv', index=False)
+patient_df = getDataFrame()
+
+#retrieve FFT per person per meal
+patient_fft_df = get_fft(patient_df)
+
+# Code to retrieve STANDARD DEVIATION (SD) per person per meal
+# Check patient_df_df for SD Dataframe
+patient_sd_df = get_sd(patient_df)
+
+# Code to retrieve ROOT MEAN SQUARE (RMS) per person per meal
+# Check patient_rms_df for RMS Dataframe
+patient_rms_df = get_rms(patient_df)
