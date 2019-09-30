@@ -13,17 +13,17 @@ def getDataFrame():
     k.read('config.ini')
     file_map = ast.literal_eval(k['FILES']['CGM_files'])
     directory = k['FILES']['data_directory']
-    patientMealCountMap = {}
     patient_df = pd.DataFrame()
+
     for patient_number, files in file_map.items():
         #read dataframes and convert each row to numpy arrays
         time_series_path = os.path.join(directory, files['time_series'])
         time_frame = pd.read_csv(time_series_path, na_filter=False)
+        time_frame_array = time_frame.to_numpy()
+
         data_path = os.path.join(directory, files['data'])
         cgm_frame = pd.read_csv(data_path, na_filter=False)
-        time_frame_array = time_frame.to_numpy()
         cgm_frame_array = cgm_frame.to_numpy()
-        patientMealCountMap[patient_number] = time_frame_array.shape[0]
 
         #zip functions joins each ith element of 2 arrays together:
         #zip([a1,a2],[b1,b2]) = [(a1,b1), (a2,b2)]
@@ -47,7 +47,9 @@ def getDataFrame():
     return patient_df
 
 patient_df = getDataFrame()
-get_fft(patient_df).to_csv('fft.csv', index=False)
+
+#retrieve FFT per person per meal
+patient_fft_df = get_fft(patient_df)
 
 # Code to retrieve STANDARD DEVIATION (SD) per person per meal
 # Check patient_df_df for SD Dataframe
