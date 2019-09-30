@@ -17,11 +17,12 @@ def getRangeInWindows(arrayOrg):
     return np_max
 
 
-def init():
+def getMinMax():
     df = getDataFrame()
     mealGroups = df.dropna(subset=['cgm_data']).groupby(['patient_number', 'meal_number']).apply(lambda group: getRangeInWindows(group.cgm_data.to_numpy()))
     # mealGroups = df.groupby(['patient_number', 'meal_number'])
-    mealGroups.reset_index().to_csv('minmax.csv', index=Fal
+    return mealGroups.reset_index().rename(columns={0: 'minMax'})
+
     # minMax_df = pd.DataFrame()
     # for mealGroupName in mealGroups.groups.keys():
     #     mealDf = mealGroups.get_group(mealGroupName)
@@ -35,4 +36,4 @@ def init():
 
 
 if __name__ == "__main__":
-    init()
+    getMinMax()

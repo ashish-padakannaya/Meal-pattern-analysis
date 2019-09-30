@@ -1,8 +1,8 @@
 import pandas as pd
 from configparser import ConfigParser
 import ast
-from helper import convert_to_epoch, getFloatFromObject
-from features import get_fft
+from DM_dummy.helper  import convert_to_epoch, getFloatFromObject
+from DM_dummy.features import get_fft
 import os
 import numpy as np
 
