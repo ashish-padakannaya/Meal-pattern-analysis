@@ -1,8 +1,9 @@
 import pandas as pd
 from configparser import ConfigParser
 import ast
-from helper import convert_to_epoch, getFloatFromObject
+from helper import convert_to_epoch, getFloatFromObject, get_patient_df
 from features import get_fft, get_sd, get_rms
+from pca import pca_analysis
 import os
 import numpy as np
 from tsfresh.feature_extraction.feature_calculators import standard_deviation
@@ -42,19 +43,28 @@ def getDataFrame():
 
     #convert timeseries to python datetime and save to CSV *check output
     patient_df['time_data'] = patient_df['time_data'].apply(lambda cell: convert_to_epoch(cell))
-    # patient_df.to_csv('test.csv', index=False)
+    patient_df.to_csv('test.csv', index=False)
 
     return patient_df
+
+all_dfs = []
 
 patient_df = getDataFrame()
 
 #retrieve FFT per person per meal
-patient_fft_df = get_fft(patient_df)
+all_dfs.append(get_fft(patient_df))
 
 # Code to retrieve STANDARD DEVIATION (SD) per person per meal
 # Check patient_df_df for SD Dataframe
-patient_sd_df = get_sd(patient_df)
+all_dfs.append(get_sd(patient_df))
 
 # Code to retrieve ROOT MEAN SQUARE (RMS) per person per meal
 # Check patient_rms_df for RMS Dataframe
-patient_rms_df = get_rms(patient_df)
+all_dfs.append(get_rms(patient_df))
+
+patient_features_df = get_patient_df(all_dfs)
+
+pca_features_df = pca_analysis(patient_features_df)
+patient_features_df.to_csv('patient_features.csv', index=False)
+
+np.savetxt("pca_features.csv", pca_features_df, delimiter=",")

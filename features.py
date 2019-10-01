@@ -60,3 +60,5 @@ def get_rms(df):
     groups_rms = groups_rms.reset_index()
     groups_rms.rename(columns={0:'Root Mean Square'}, inplace=True)
     return groups_rms
+
+

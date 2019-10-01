@@ -25,3 +25,10 @@ def getFloatFromObject(array):
         elif item == 'Nan': newArray.append(np.nan)
 
     return np.array(newArray).astype(np.float)
+
+def get_patient_df(all_dfs):
+    final = all_dfs[0]
+    for i in range(1,len(all_dfs)):
+        final = final.merge(all_dfs[i], how='left', on=['patient_number','meal_number'])
+   
+    return final
