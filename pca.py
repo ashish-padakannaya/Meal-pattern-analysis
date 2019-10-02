@@ -20,7 +20,7 @@ def pca_analysis(patient_features_df):
     '''
     feature_dict = ast.literal_eval(k['FEATURES']['feature_dict'])
 
-    df = pd.read_csv('test_features.csv').dropna()
+    df = patient_features_df.dropna()
     sc = StandardScaler() 
     df = df.iloc[:, 2:].values
     df_normalized = sc.fit_transform(df)
