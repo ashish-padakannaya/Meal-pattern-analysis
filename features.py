@@ -1,5 +1,5 @@
 import pandas as pd
-from tsfresh.feature_extraction.feature_calculators import standard_deviation, fft_aggregated,  longest_strike_above_mean
+from tsfresh.feature_extraction.feature_calculators import standard_deviation, fft_aggregated,  longest_strike_above_mean, linear_trend
 import numpy as np
 
 def return_fft_array(series):
@@ -44,6 +44,42 @@ def get_fft(df):
     del groups_fft[0]
 
     return groups_fft
+
+def return_linear_trend_array(arr):
+    """generates a list of linear trend array value
+    
+    Arguments:
+        arr {Pandas.Series} -- Pandas group by series to run computation over
+    
+    Returns:
+        list -- list of linear trend values [pvalue, rvalue, slope, intercept, stderr]
+    """
+    params = [
+        {'attr': 'pvalue'},
+        {'attr': 'rvalue'},
+        {'attr': 'slope'},
+        {'attr': 'intercept'},
+        {'attr': 'stderr'}
+    ] 
+    return [item[1] for item in linear_trend(arr, params)]
+
+
+def get_lt(df):
+    """generates a dataframe with linear trend value columsn
+    
+    Arguments:
+        df {Pandas.DataFrame} -- patient dataframe
+    
+    Returns:
+        Pandas.DataFrame -- dataframe with linear trend values for each patient, meal combination
+    """
+    df.dropna(subset=['cgm_data'], inplace=True)
+    groups_lt = df.groupby(['patient_number', 'meal_number']).apply(lambda x: return_linear_trend_array(x.cgm_data))
+    temp = groups_lt.reset_index()[0].apply(pd.Series)
+    temp.rename(columns={0: 'lt_pvalue', 1: 'lt_rvalue', 2: 'lt_slope', 3: 'lt_intercept', 4: 'lt_stderr'}, inplace=True)
+    groups_lt = pd.concat([groups_lt.reset_index(), temp], axis=1)
+    del groups_lt[0]
+    return groups_lt
 
 def get_range_in_windows(arrayOrg):
     """get ranges for dataframe to perform min max computation
@@ -124,5 +160,5 @@ def get_lsam(df):
     df.dropna(subset=['cgm_data'],inplace=True)
     groups_lsam = df.groupby(['patient_number','meal_number']).apply(lambda x: longest_strike_above_mean(x.cgm_data))
     groups_lsam = groups_lsam.reset_index()
-    groups_lsam.rename(columns={0:'Longest Strike Above Mean'}, inplace=True)
+    groups_lsam.rename(columns={0:'lsam'}, inplace=True)
     return groups_lsam
