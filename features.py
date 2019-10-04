@@ -1,5 +1,5 @@
 import pandas as pd
-from tsfresh.feature_extraction.feature_calculators import standard_deviation, fft_aggregated
+from tsfresh.feature_extraction.feature_calculators import standard_deviation, fft_aggregated,  longest_strike_above_mean
 import numpy as np
 
 def return_fft_array(series):
@@ -111,4 +111,18 @@ def get_rms(df):
     groups_rms.rename(columns={0:'rms'}, inplace=True)
     return groups_rms
 
+def get_lsam(df):
+    """get longest strike above mean of each patient meal combo
+    
+    Arguments:
+        df {Pandas.DataFrame} -- patient dataframe
+    
+    Returns:
+        Pandas.DataFrame -- dataframe with lsam column for each patient_number, meal_number combination
+    """
 
+    df.dropna(subset=['cgm_data'],inplace=True)
+    groups_lsam = df.groupby(['patient_number','meal_number']).apply(lambda x: longest_strike_above_mean(x.cgm_data))
+    groups_lsam = groups_lsam.reset_index()
+    groups_lsam.rename(columns={0:'Longest Strike Above Mean'}, inplace=True)
+    return groups_lsam
