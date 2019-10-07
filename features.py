@@ -179,7 +179,7 @@ def get_cam(df):
     groups_cam.rename(columns={0:'Count Above Mean'}, inplace=True)
     return groups_cam
 
-def get_cam(df):
+def get_cbm(df):
     """get count of meals below mean of each patient meal combo
     
     Arguments:
