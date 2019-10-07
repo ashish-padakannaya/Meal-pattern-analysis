@@ -1,6 +1,6 @@
 import pandas as pd
 from helper import convert_to_epoch, getFloatFromObject, get_data_frame, get_patient_df
-from features import get_lt, get_sd, get_rms, get_min_max, get_lsam
+from features import get_lt, get_sd, get_rms, get_min_max, get_lsam, get_cam, get_cbm
 from pca import pca_analysis
 import os
 import numpy as np
@@ -18,6 +18,8 @@ if __name__ == "__main__":
     all_feature_dfs.append(get_rms(patient_df))
     all_feature_dfs.append(get_min_max(patient_df))
     all_feature_dfs.append(get_lsam(patient_df))
+    all_feature_dfs.append(get_cam(patient_df))
+    all_feature_dfs.append(get_cbm(patient_df))
     patient_features_df = get_patient_df(all_feature_dfs)
 
     #ouput CSVs for original features and PCA features
