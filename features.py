@@ -1,5 +1,5 @@
 import pandas as pd
-from tsfresh.feature_extraction.feature_calculators import standard_deviation, fft_aggregated,  longest_strike_above_mean, linear_trend
+from tsfresh.feature_extraction.feature_calculators import standard_deviation, fft_aggregated,  longest_strike_above_mean, linear_trend,  count_above_mean, count_below_mean
 import numpy as np
 
 def return_fft_array(series):
@@ -162,3 +162,34 @@ def get_lsam(df):
     groups_lsam = groups_lsam.reset_index()
     groups_lsam.rename(columns={0:'lsam'}, inplace=True)
     return groups_lsam
+
+
+def get_cam(df):
+    """get count of meals above mean of each patient meal combo
+    
+    Arguments:
+        df {Pandas.DataFrame} -- patient dataframe
+    
+    Returns:
+        Pandas.DataFrame -- dataframe with cam column for each patient_number, meal_number combination
+    """
+    df.dropna(subset=['cgm_data'],inplace=True)
+    groups_cam = df.groupby(['patient_number','meal_number']).apply(lambda x: count_above_mean(x.cgm_data))
+    groups_cam = groups_cam.reset_index()
+    groups_cam.rename(columns={0:'Count Above Mean'}, inplace=True)
+    return groups_cam
+
+def get_cam(df):
+    """get count of meals below mean of each patient meal combo
+    
+    Arguments:
+        df {Pandas.DataFrame} -- patient dataframe
+    
+    Returns:
+        Pandas.DataFrame -- dataframe with cam column for each patient_number, meal_number combination
+    """
+    df.dropna(subset=['cgm_data'],inplace=True)
+    groups_cbm = df.groupby(['patient_number','meal_number']).apply(lambda x: count_below_mean(x.cgm_data))
+    groups_cbm = groups_cbm.reset_index()
+    groups_cbm.rename(columns={0:'Count Below Mean'}, inplace=True)
+    return groups_cbm
