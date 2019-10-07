@@ -176,7 +176,7 @@ def get_cam(df):
     df.dropna(subset=['cgm_data'],inplace=True)
     groups_cam = df.groupby(['patient_number','meal_number']).apply(lambda x: count_above_mean(x.cgm_data))
     groups_cam = groups_cam.reset_index()
-    groups_cam.rename(columns={0:'Count Above Mean'}, inplace=True)
+    groups_cam.rename(columns={0:'cam'}, inplace=True)
     return groups_cam
 
 def get_cbm(df):
@@ -191,5 +191,5 @@ def get_cbm(df):
     df.dropna(subset=['cgm_data'],inplace=True)
     groups_cbm = df.groupby(['patient_number','meal_number']).apply(lambda x: count_below_mean(x.cgm_data))
     groups_cbm = groups_cbm.reset_index()
-    groups_cbm.rename(columns={0:'Count Below Mean'}, inplace=True)
+    groups_cbm.rename(columns={0:'cbm'}, inplace=True)
     return groups_cbm
