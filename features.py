@@ -142,7 +142,7 @@ def get_rms(df):
         Pandas.DataFrame -- dataframe with rms column for each patient_number, meal_number combination
     """
     df.dropna(subset=['cgm_data'],inplace=True)
-    groups_rms = df.groupby(['patient_number','meal_number']).apply(lambda x: np.square(np.mean((x.cgm_data)**2)))
+    groups_rms = df.groupby(['patient_number','meal_number']).apply(lambda x: np.sqrt(np.mean((x.cgm_data)**2)))
     groups_rms = groups_rms.reset_index()
     groups_rms.rename(columns={0:'rms'}, inplace=True)
     return groups_rms
