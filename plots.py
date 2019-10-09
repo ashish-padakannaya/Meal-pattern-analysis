@@ -35,7 +35,6 @@ def plot_eigenvectors_pca():
         3 : '#abab02',
         4 : '#bc82e8',
     }
-    print(len(vals))
     for i in range(len(vals)):
         barlist[i].set_color(color_map[int(i/7)])
 
