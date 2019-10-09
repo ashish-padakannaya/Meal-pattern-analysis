@@ -29,10 +29,14 @@ def pca_analysis(patient_features_df):
     
     pca_func = PCA(n_components = 5)
     pca_features = pca_func.fit_transform(normalized_features)
-    print(pca_features.shape)
-    print(pca_func.explained_variance_ratio_)
+    explained_variance_ratio = list(pca_func.explained_variance_ratio_)
+
+    with open('Outputs/explained_variance_ratio.txt', 'w') as f:
+        for item in explained_variance_ratio:
+            f.write("%s\n" % item)
+
     pca_components = pd.DataFrame(pca_func.components_,columns=normalized_features.columns,index = ['PC-1', 'PC-2', 'PC-3', 'PC-4', 'PC-5'])
-    pca_components.to_csv('pca_components.csv', index=True)
+    pca_components.to_csv('Outputs/pca_components.csv', index=True)
 
     return pca_features
 

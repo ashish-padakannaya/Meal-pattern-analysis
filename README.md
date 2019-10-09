@@ -31,3 +31,8 @@ Now install all the required libraries. Make sure you're inside the project dire
 Run program using python or python3
 
     python main.py
+
+The following outputs and folders are created
+
+    Outputs - contains .csv files of feature matrices, PCA feature matrices, PCA eigenvectors and text file for PCA eigenvalues
+    Plots - contains folders for the plots for each feature and PCA features

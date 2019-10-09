@@ -5,7 +5,7 @@ from pca import pca_analysis
 import os
 import numpy as np
 from tsfresh.feature_extraction.feature_calculators import standard_deviation
-
+from plots import makePlots
 
 if __name__ == "__main__":
     
@@ -18,11 +18,12 @@ if __name__ == "__main__":
     all_feature_dfs.append(get_rms(patient_df))
     all_feature_dfs.append(get_min_max(patient_df))
     all_feature_dfs.append(get_lsam(patient_df))
-    all_feature_dfs.append(get_cam(patient_df))
-    all_feature_dfs.append(get_cbm(patient_df))
     patient_features_df = get_patient_df(all_feature_dfs)
 
     #ouput CSVs for original features and PCA features
     pca_features_df = pca_analysis(patient_features_df)
-    patient_features_df.to_csv('patient_features.csv', index=False)
-    np.savetxt("pca_features.csv", pca_features_df, delimiter=",")
+    patient_features_df.to_csv('Outputs/patient_features.csv', index=False)
+    np.savetxt("Outputs/pca_features.csv", pca_features_df, delimiter=",")
+
+    makePlots()
+

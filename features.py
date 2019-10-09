@@ -58,7 +58,6 @@ def return_linear_trend_array(arr):
         {'attr': 'pvalue'},
         {'attr': 'rvalue'},
         {'attr': 'slope'},
-        {'attr': 'intercept'},
         {'attr': 'stderr'}
     ] 
     return [item[1] for item in linear_trend(arr, params)]
@@ -76,7 +75,7 @@ def get_lt(df):
     df.dropna(subset=['cgm_data'], inplace=True)
     groups_lt = df.groupby(['patient_number', 'meal_number']).apply(lambda x: return_linear_trend_array(x.cgm_data))
     temp = groups_lt.reset_index()[0].apply(pd.Series)
-    temp.rename(columns={0: 'lt_pvalue', 1: 'lt_rvalue', 2: 'lt_slope', 3: 'lt_intercept', 4: 'lt_stderr'}, inplace=True)
+    temp.rename(columns={0: 'lt_pvalue', 1: 'lt_rvalue', 2: 'lt_slope', 3: 'lt_stderr'}, inplace=True)
     groups_lt = pd.concat([groups_lt.reset_index(), temp], axis=1)
     del groups_lt[0]
     return groups_lt

@@ -46,7 +46,7 @@ def get_data_frame():
 
     #convert timeseries to python datetime and save to CSV *check output
     patient_df['time_data'] = patient_df['time_data'].apply(lambda cell: convert_to_epoch(cell))
-    patient_df.to_csv('test.csv', index=False)
+    patient_df.to_csv('Outputs/data_set.csv', index=False)
 
     return patient_df
 
