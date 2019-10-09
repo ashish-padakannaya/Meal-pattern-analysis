@@ -1,4 +1,5 @@
 
+
 # Installation instructions
 
   
@@ -12,6 +13,7 @@ After cloning the repository, Make sure you have Python3.
 
 
 Create a new virtual environment and activate it.
+
 
   
 
@@ -32,7 +34,10 @@ Run program using python or python3
 
     python main.py
 
-The following outputs and folders are created
+  # Codebase and outputs
 
-    Outputs - contains .csv files of feature matrices, PCA feature matrices, PCA eigenvectors and text file for PCA eigenvalues
-    Plots - contains folders for the plots for each feature and PCA features
+
+ 1. Codebase - contains the entire codebase with cgm data, helper functions and config
+ 2. Outputs - contains .csv files of feature matrices, PCA feature matrices, PCA eigenvectors and text file for PCA eigenvalues
+ 3. Plots - contains folders for the plots for each feature and PCA features
+ 4. README.pdf - Quick start readme file.
