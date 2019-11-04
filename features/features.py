@@ -73,7 +73,7 @@ def get_range_in_windows(arrayOrg):
     np_max = np.max(np.array(rangeArray))
     return np_max
 
-def get_min_max(arr):
+def get_min_max(df):
     """gets min max of dataframe in windows
     
     Arguments:
