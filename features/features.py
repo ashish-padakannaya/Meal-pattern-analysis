@@ -1,6 +1,12 @@
 import pandas as pd
 from tsfresh.feature_extraction.feature_calculators import standard_deviation, fft_aggregated,  longest_strike_above_mean, linear_trend,  count_above_mean, count_below_mean
 import numpy as np
+from configparser import ConfigParser
+from ast import literal_eval
+
+# import sys
+# sys.path.append('../')
+from features.get_pca import get_pca_vectors
 
 def return_fft_array(series):
     """generates FFT aggregate metrics like centroid, variance, skew, kurtosis
@@ -45,41 +51,6 @@ def get_fft(df):
 
     return groups_fft
 
-def return_linear_trend_array(arr):
-    """generates a list of linear trend array value
-    
-    Arguments:
-        arr {Pandas.Series} -- Pandas group by series to run computation over
-    
-    Returns:
-        list -- list of linear trend values [pvalue, rvalue, slope, intercept, stderr]
-    """
-    params = [
-        {'attr': 'pvalue'},
-        {'attr': 'rvalue'},
-        {'attr': 'slope'},
-        {'attr': 'stderr'}
-    ] 
-    return [item[1] for item in linear_trend(arr, params)]
-
-
-def get_lt(df):
-    """generates a dataframe with linear trend value columsn
-    
-    Arguments:
-        df {Pandas.DataFrame} -- patient dataframe
-    
-    Returns:
-        Pandas.DataFrame -- dataframe with linear trend values for each patient, meal combination
-    """
-    df.dropna(subset=['cgm_data'], inplace=True)
-    groups_lt = df.groupby(['patient_number', 'meal_number']).apply(lambda x: return_linear_trend_array(x.cgm_data))
-    temp = groups_lt.reset_index()[0].apply(pd.Series)
-    temp.rename(columns={0: 'lt_pvalue', 1: 'lt_rvalue', 2: 'lt_slope', 3: 'lt_stderr'}, inplace=True)
-    groups_lt = pd.concat([groups_lt.reset_index(), temp], axis=1)
-    del groups_lt[0]
-    return groups_lt
-
 def get_range_in_windows(arrayOrg):
     """get ranges for dataframe to perform min max computation
     
@@ -102,7 +73,7 @@ def get_range_in_windows(arrayOrg):
     np_max = np.max(np.array(rangeArray))
     return np_max
 
-def get_min_max(df):
+def get_min_max(arr):
     """gets min max of dataframe in windows
     
     Arguments:
@@ -129,39 +100,6 @@ def get_sd(df):
     groups_sd = groups_sd.reset_index()
     groups_sd.rename(columns={0:'sd'}, inplace=True)
     return groups_sd
-
-
-def get_rms(df):
-    """get root mean square of each patient meal combo
-    
-    Arguments:
-        df {Pandas.DataFrame} -- patient dataframe
-    
-    Returns:
-        Pandas.DataFrame -- dataframe with rms column for each patient_number, meal_number combination
-    """
-    df.dropna(subset=['cgm_data'],inplace=True)
-    groups_rms = df.groupby(['patient_number','meal_number']).apply(lambda x: np.sqrt(np.mean((x.cgm_data)**2)))
-    groups_rms = groups_rms.reset_index()
-    groups_rms.rename(columns={0:'rms'}, inplace=True)
-    return groups_rms
-
-def get_lsam(df):
-    """get longest strike above mean of each patient meal combo
-    
-    Arguments:
-        df {Pandas.DataFrame} -- patient dataframe
-    
-    Returns:
-        Pandas.DataFrame -- dataframe with lsam column for each patient_number, meal_number combination
-    """
-
-    df.dropna(subset=['cgm_data'],inplace=True)
-    groups_lsam = df.groupby(['patient_number','meal_number']).apply(lambda x: longest_strike_above_mean(x.cgm_data))
-    groups_lsam = groups_lsam.reset_index()
-    groups_lsam.rename(columns={0:'lsam'}, inplace=True)
-    return groups_lsam
-
 
 def get_cam(df):
     """get count of meals above mean of each patient meal combo
@@ -192,3 +130,94 @@ def get_cbm(df):
     groups_cbm = groups_cbm.reset_index()
     groups_cbm.rename(columns={0:'cbm'}, inplace=True)
     return groups_cbm
+
+
+#REFACTORED FEATURE VECTOR CODE
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+def get_rms(arr):
+    """get root mean square of a single row vector
+    
+    Arguments:
+        arr {np.array} -- 1D row array
+    
+    Returns:
+        np.array -- 1 element numpy array with RMS value
+    """
+    return np.array([np.sqrt(np.mean((arr)**2))])
+
+
+def get_lsam(arr):
+    """get longest strike above mean of a single row vector
+    
+    Arguments:
+        arr {np.array} -- 1D row array
+    
+    Returns:
+        np.array -- 1 element numpy array with LSAM value
+    """
+    return np.array([longest_strike_above_mean(arr)])
+
+def get_lt(arr):
+    """get linear trend attributes of a single row vector
+    
+    Arguments:
+        arr {np.array} -- 1D row array
+    
+    Returns:
+        np.array -- 4 element numpy array with linear trend values
+    """
+    params = [
+        {'attr': 'pvalue'},
+        {'attr': 'rvalue'},
+        {'attr': 'slope'},
+        {'attr': 'stderr'}
+    ] 
+    return np.array([item[1] for item in linear_trend(arr, params)])
+
+
+def get_feature_func(feature_name):
+    """Dynamically maps feature name to functions
+    
+    Arguments:
+        feature_name {str} -- name of feture
+    
+    Returns:
+        function -- corresponding feature function
+    """
+    feature_to_function_map = {
+        'linear_trend': get_lt,
+        'rms': get_rms,
+        'min_max': get_min_max,
+        'lsam': get_lsam
+    }
+    return feature_to_function_map[feature_name]
+
+
+def generate_features(meal_array, apply_pca=True):
+    """generates features from meal array data
+    
+    Arguments:
+        meal_array {np.array} -- 2D numpy array of meal and no meal data
+    
+    Keyword Arguments:
+        apply_pca {bool} -- set to False if data should not be reduced (default: {True})
+    
+    Returns:
+        np.array -- 2D numpy array of meal data features
+    """
+    config = ConfigParser()
+    config.read('config.ini')
+    k = int(config['FEATURES']['k'])
+    feature_array = np.array([])
+
+    for feature in literal_eval(config['FEATURES']['features']):
+        res = map(get_feature_func(feature), meal_array)
+        res = np.array(list(res))
+
+        if not feature_array.size: feature_array = res
+        else: feature_array = np.concatenate((feature_array, res), axis=1)
+
+    if apply_pca:
+        feature_array = get_pca_vectors(feature_array, k)
+
+    return feature_array
