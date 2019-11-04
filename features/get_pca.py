@@ -1,7 +1,6 @@
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
-
 def get_pca_vectors(vectors, k, **opts):
     """generates k PCA vectors 
     
@@ -19,6 +18,7 @@ def get_pca_vectors(vectors, k, **opts):
 
     pca = PCA(n_components=k)
     pca_vectors = pca.fit_transform(scaled_values)
+    print("Total variance accounted for: ", sum(pca.explained_variance_ratio_))
 
     return pca_vectors
 
