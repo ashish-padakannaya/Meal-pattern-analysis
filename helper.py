@@ -24,11 +24,13 @@ def get_meal_array():
     for meal_data_file in os.listdir(directory):
         print("loading file - " + meal_data_file)
         class_label = 0 if 'Nomeal' in meal_data_file else 1
+
         meal_data = pd.read_csv(os.path.join(directory, meal_data_file), na_filter = False, header = None, sep = '\n')
 
         for i,_ in enumerate(meal_data.iterrows()):
             t = getFloatFromObjectForMealData(meal_data.loc[i])
             if t.size != 0: 
+                t = t[::-1]
                 meal_data_np.append(t)
                 class_labels_np.append(class_label)
         
@@ -49,8 +51,8 @@ def getFloatFromObjectForMealData(array):
     newArray = []
     for item in arrayStr:
         if item in ['None', 'Nan', 'Nan', '']:
-            newArray.append(np.nan)
+            newArray.append(0)
+            continue
         else: newArray.append(item)
     res = np.array(newArray).astype(np.float)
     return res[~np.isnan(res)]
-
