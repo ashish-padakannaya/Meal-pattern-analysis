@@ -4,7 +4,7 @@ standard_deviation, fft_aggregated,  longest_strike_above_mean, linear_trend, \
 count_above_mean, count_below_mean, time_reversal_asymmetry_statistic, skewness, variance, mean, median, \
 mean_change
 import numpy as np
-from configparser import ConfigParser
+from dynaconf import settings
 from ast import literal_eval
 from features.get_pca import get_pca_vectors
 
@@ -170,12 +170,11 @@ def generate_features(meal_array, apply_pca=True):
     Returns:
         np.array -- 2D numpy array of meal data features
     """
-    config = ConfigParser()
-    config.read('config.ini')
-    k = int(config['FEATURES']['k'])
+    k = int(settings.FEATURES.K)
+    features = list(settings.FEATURES.FEATURES)
     feature_array = np.array([])
-
-    for feature in literal_eval(config['FEATURES']['features']):
+    
+    for feature in features:
         res = map(get_feature_func(feature), meal_array)
         res = np.array(list(res))
 
@@ -186,4 +185,3 @@ def generate_features(meal_array, apply_pca=True):
         feature_array = get_pca_vectors(feature_array, k)
 
     return feature_array
-
