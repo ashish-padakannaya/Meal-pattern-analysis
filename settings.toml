@@ -1,0 +1,9 @@
+[default.files]
+meal_data_directory = './MealDataFolder'
+
+[default.features]
+features = ['variance','mean', 'median', 'lsam', 'cam','cbm','fft', 'linear_trend','mean_change','time']
+k = 20
+
+[deafult.classifier]
+k_fold = 10
