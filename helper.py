@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
-from configparser import ConfigParser
 import os
 import ast
 import pandas as pd
 import numpy as np
+from dynaconf import settings
+from pathlib import Path
 
-import sys
-sys.path.append('../')
 from features.features import generate_features
 
 def get_meal_array():
@@ -15,9 +14,9 @@ def get_meal_array():
     Returns:
         tuple of the form (numpy array of all data, numpy array of class labels)
     """
-    k = ConfigParser()
-    k.read('config.ini')
-    directory = k['FILES']['meal_data_directory']
+    directory = Path(settings.path_for(settings.FILES.MEAL_DATA_DIRECTORY))
+    directory = str(directory)
+
     meal_data_np = []
     class_labels_np = []
 
