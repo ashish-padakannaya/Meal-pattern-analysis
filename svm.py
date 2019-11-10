@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.svm import SVC
-
+import random
 
 def getAccuracy(svmModel, testData, testGt):
     correctlyClassified  = 0
@@ -15,6 +15,7 @@ def getAccuracy(svmModel, testData, testGt):
 
 def trainSVM(trainingData, labels):
     kf = KFold(n_splits=2)
+    # random.shuffle(trainingData)
     kf.get_n_splits(trainingData)
 
     counter = 0
@@ -26,8 +27,3 @@ def trainSVM(trainingData, labels):
             getAccuracy(svclassifier, trainingData[test_index], labels[test_index])
             # print("{} {}".format(len(trainingData[test_index]), len(labels[test_index])))
             print("Counter: {} | Accuracy: {}".format(counter, getAccuracy(svclassifier, trainingData[test_index], labels[test_index])))
-
-
-
-
-

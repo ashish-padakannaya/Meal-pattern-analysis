@@ -19,6 +19,8 @@ def get_range_in_windows(arrayOrg):
         float -- max value across windows
     """
     windowSize = int(arrayOrg.shape[0] / 5)
+    if windowSize < 5: return np.max(arrayOrg) - np.min(arrayOrg)
+
     arrayLength = arrayOrg.shape[0]
     lastValue = arrayOrg[arrayLength - 1]
     arrayPadded = np.pad(arrayOrg, ((0, windowSize - 1)), mode='constant', constant_values=lastValue)
@@ -26,7 +28,7 @@ def get_range_in_windows(arrayOrg):
     for index in range(arrayLength):
         window = arrayPadded[index: index + windowSize]
         minMinusMax = np.max(window) - np.min(window)
-        rangeArray.append(minMinusMax)
+        rangeArray.append(minMinusMax/arrayOrg.shape[0])
 
     np_max = np.max(np.array(rangeArray))
     return np_max
@@ -42,6 +44,21 @@ def get_min_max(df):
     """
     mealGroups = df.dropna(subset=['cgm_data']).groupby(['patient_number', 'meal_number']).apply(lambda group: get_range_in_windows(group.cgm_data.to_numpy()))
     return mealGroups.reset_index().rename(columns={0: 'min_max'})
+
+
+def get_min_max_for_npd(df):
+    """gets min max of dataframe in windows
+
+    Arguments:
+        df {Pandas.DataFrame} -- patient dataframe
+
+    Returns:
+        Pandas.DataFrame -- dataframe with min max column for each patient_number, meal_number combination
+    """
+    windows = np.array(get_range_in_windows(df))
+    res = np.array([windows])
+    res = np.nan_to_num(res)
+    return res
 
 def get_fft(arr):
     attrs = [
@@ -141,7 +158,7 @@ def get_feature_func(feature_name):
     feature_to_function_map = {
         'linear_trend': get_lt,
         'rms': get_rms,
-        'min_max': get_min_max,
+        'min_max': get_min_max_for_npd,
         'lsam': get_lsam,
         'fft': get_fft,
         'cam': get_cam,
@@ -177,6 +194,8 @@ def generate_features(meal_array, apply_pca=True, load_pca = False):
     for feature in features:
         res = map(get_feature_func(feature), meal_array)
         res = np.array(list(res))
+        print("Feature: {} | Size: {}".format(feature, res.shape))
+
 
         if not feature_array.size: feature_array = res
         else: feature_array = np.concatenate((feature_array, res), axis=1)
