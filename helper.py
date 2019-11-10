@@ -8,7 +8,7 @@ from pathlib import Path
 
 from features.features import generate_features
 
-def get_meal_array():
+def get_meal_array(padding=False):
     """
     To convert meal data from CSVs in MealDataFolder to a numpy array and a class label array
     Returns:
@@ -20,27 +20,35 @@ def get_meal_array():
     meal_data_np = []
     class_labels_np = []
 
+    max_len = 0
     for meal_data_file in os.listdir(directory):
         print("loading file - " + meal_data_file)
         class_label = 0 if 'Nomeal' in meal_data_file else 1
 
         meal_data = pd.read_csv(os.path.join(directory, meal_data_file), na_filter = False, header = None, sep = '\n')
-
         for i,_ in enumerate(meal_data.iterrows()):
             t = getFloatFromObjectForMealData(meal_data.loc[i])
             if t.size != 0: 
                 t = t[::-1]
+                if padding and t.size > max_len: max_len = t.size
                 meal_data_np.append(t)
                 class_labels_np.append(class_label)
-        
+
+    if padding and max_len:
+        k = []
+        for each in meal_data_np:
+            k.append( np.pad(each, max_len - len(each)) )
+        meal_data_np = np.array(k)
+
+    
     meal_data_np = np.array(meal_data_np)
     class_labels_np = np.array(class_labels_np)
 
     return meal_data_np, class_labels_np
 
 
-def get_meal_vectors(apply_pca=True):
-    data, labels = get_meal_array()
+def get_meal_vectors(apply_pca=True, padding=False):
+    data, labels = get_meal_array(padding=padding)
     data = generate_features(data, apply_pca=apply_pca)
     return data, labels
 
