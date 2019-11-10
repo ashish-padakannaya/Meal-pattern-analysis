@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
-from configparser import ConfigParser
 import os
 import ast
 import pandas as pd
 import numpy as np
+from dynaconf import settings
+from pathlib import Path
 
-import sys
-sys.path.append('../')
 from features.features import generate_features
 
 def get_meal_array():
@@ -15,20 +14,22 @@ def get_meal_array():
     Returns:
         tuple of the form (numpy array of all data, numpy array of class labels)
     """
-    k = ConfigParser()
-    k.read('config.ini')
-    directory = k['FILES']['meal_data_directory']
+    directory = Path(settings.path_for(settings.FILES.MEAL_DATA_DIRECTORY))
+    directory = str(directory)
+
     meal_data_np = []
     class_labels_np = []
 
     for meal_data_file in os.listdir(directory):
         print("loading file - " + meal_data_file)
         class_label = 0 if 'Nomeal' in meal_data_file else 1
+
         meal_data = pd.read_csv(os.path.join(directory, meal_data_file), na_filter = False, header = None, sep = '\n')
 
         for i,_ in enumerate(meal_data.iterrows()):
             t = getFloatFromObjectForMealData(meal_data.loc[i])
             if t.size != 0: 
+                t = t[::-1]
                 meal_data_np.append(t)
                 class_labels_np.append(class_label)
         
@@ -49,8 +50,8 @@ def getFloatFromObjectForMealData(array):
     newArray = []
     for item in arrayStr:
         if item in ['None', 'Nan', 'Nan', '']:
-            newArray.append(np.nan)
+            newArray.append(0)
+            continue
         else: newArray.append(item)
     res = np.array(newArray).astype(np.float)
     return res[~np.isnan(res)]
-
