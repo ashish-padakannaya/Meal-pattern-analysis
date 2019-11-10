@@ -1,9 +1,12 @@
 [default.files]
 meal_data_directory = './MealDataFolder'
-
+models = './Models'
 [default.features]
 features = ['variance','mean', 'median', 'lsam', 'cam','cbm','fft', 'linear_trend','mean_change','time']
 k = 20
 
-[deafult.classifier]
+[default.classifier]
 k_fold = 10
+model_dict = {
+        randomForestClassifier="randomForestClassifier.pkl"
+    }
