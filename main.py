@@ -37,10 +37,11 @@ if __name__ == "__main__":
     directory = Path(settings.path_for(settings.FILES.MODELS))
     directory = str(directory)
 
-    model_dict = settings.get('CLASSIFIER.MODEL_DICT')
-    print(model_dict) 
+    model_dict = list(settings.CLASSIFIER.MODEL_DICT)
+    print(model_dict)
 
-    for models, filename in model_dict.items():
+    for classifier in model_dict:
+        filename = classifier[1]
         model = joblib.load(os.path.join(directory, filename))
         meal_vectors, labels = get_meal_vectors(True,False,True)
         predictions = model.predict(meal_vectors)
