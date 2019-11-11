@@ -23,14 +23,11 @@ if __name__ == "__main__":
             t = helper.getFloatFromObjectForMealData(meal_data.loc[i])
             if t.size != 0: 
                 t = t[::-1]
-                if t.size > max_len:
-                    max_len = t.size
+                if padding and t.size > max_len: max_len = t.size
                 meal_data_np.append(t)
-    k = []
-    for each in meal_data_np:
-        k.append(
-            np.pad(each, max_len - len(each))
-        )
+                
+    if padding and max_len: pad_array(meal_data_np, max_len)
+    else: meal_data_np = np.array(meal_data_np)
     
     meal_data_np = np.array(meal_data_np)
 
