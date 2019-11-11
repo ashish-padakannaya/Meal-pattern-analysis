@@ -7,7 +7,9 @@ import pandas as pd
 import numpy as np
 import helper
 from sklearn.externals import joblib
-
+import warnings
+from sklearn.exceptions import DataConversionWarning
+warnings.filterwarnings(action='ignore', category=DataConversionWarning)
 from features.features import generate_features 
 
 if __name__ == "__main__":
@@ -40,3 +42,7 @@ if __name__ == "__main__":
     # output_folder = Path(settings.path_for(settings.FILES.OUTPUT_DIRECTORY))
     output_file = 'classifier_predictions.csv' 
     classifier_preditions.to_csv(output_file, index=False)
+
+    print("###################################################")
+    print("Check {} for classifier outputs".format(output_file))
+    print("###################################################")
