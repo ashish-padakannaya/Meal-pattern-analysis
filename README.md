@@ -36,12 +36,13 @@ filename is the name of the CSV you will put as input for testing data.
   # Codebase and outputs
 
 
- 1. Codebase - contains the entire codebase with cgm data, helper functions, classifiers and config.
- 2. Outputs - are contained in a CSV file predictions.csv containing predicted values of each classifier used, it is in the same directory as `main.py`
+ 1. Codebase - contains the entire codebase with 4 classifier models and meal/no-meal data.
+ 2. Outputs - classifier labels are stored in **classifier_predictions.csv** for each classifier.
  
-	 Meal is signified by 1 and No Meal is signified by 0.
+	 Meal label is signified by 1 and No Meal is signified by 0.
  
  4. README.pdf - Quick start readme file.
+
 
 # Average scores for different classifiers with K-Fold Validation:
 
