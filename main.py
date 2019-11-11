@@ -13,22 +13,15 @@ from features.features import generate_features
 if __name__ == "__main__":
     
     filename = sys.argv[1]
-
     meal_data_np = []
     print("loading file - " + filename)
     predictions_array = []
     meal_data = pd.read_csv(os.path.join(filename), na_filter = False, header = None, sep = '\n')
-    max_len = 0
     for i,_ in enumerate(meal_data.iterrows()):
             t = helper.getFloatFromObjectForMealData(meal_data.loc[i])
             if t.size != 0: 
                 t = t[::-1]
-                if padding and t.size > max_len: max_len = t.size
-                meal_data_np.append(t)
-                
-    if padding and max_len: pad_array(meal_data_np, max_len)
-    else: meal_data_np = np.array(meal_data_np)
-    
+                meal_data_np.append(t)                
     meal_data_np = np.array(meal_data_np)
 
     directory = Path(settings.path_for(settings.FILES.MODELS))
