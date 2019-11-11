@@ -28,7 +28,7 @@ clf = RandomForestClassifier(bootstrap=False, class_weight=None,
                                         min_impurity_split=None,
                                         min_samples_leaf=5, min_samples_split=6,
                                         min_weight_fraction_leaf=0.0,
-                                        n_estimators=70, n_jobs=None,
+                                        n_estimators=100, n_jobs=None,
                                         oob_score=False, random_state=23,
                                         verbose=0, warm_start=False)
 
