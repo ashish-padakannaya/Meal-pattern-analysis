@@ -1,13 +1,11 @@
 import sys
 sys.path.append('../')
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 import pandas as pd
-from tpot import TPOTClassifier
 from sklearn.datasets import load_digits
-from sklearn.model_selection import train_test_split
-import sklearn.metrics
 import timeit
 from sklearn.metrics import f1_score
 from sklearn.model_selection import KFold
@@ -31,8 +29,11 @@ clf = RandomForestClassifier(bootstrap=False, class_weight=None,
                                         n_estimators=100, n_jobs=None,
                                         oob_score=False, random_state=23,
                                         verbose=0, warm_start=False)
-
-scores = []
+                                        
+f1scores = []
+accscores = []
+precscores = []
+recallscores = []
 
 for train_index, test_index in kf.split(x):
     train_data, test_data = x[train_index], x[test_index]
@@ -40,38 +41,20 @@ for train_index, test_index in kf.split(x):
 
     clf.fit(train_data,train_labels)
     y_pred=clf.predict(test_data)
+    f1scores.append(f1_score(test_labels, y_pred))
+    accscores.append(accuracy_score(test_labels, y_pred))
+    precscores.append(precision_score(test_labels, y_pred))
+    recallscores.append(recall_score(test_labels, y_pred))
 
-scores.append(f1_score(test_labels, y_pred))
-
-print("mean scores - " + str(np.mean(scores)))
+# Print the scores
+print("F1 Scores: " , str(round(np.mean(f1scores)*100, 2)),"%")
+print("Accuracy Scores: " ,str(round(np.mean(accscores)*100, 2)),"%") 
+print("Precision Scores: " ,str(round(np.mean(precscores)*100, 2)),"%") 
+print("Recall Scores: " , str(round(np.mean(recallscores)*100, 2)),"%") 
 
 clf.fit(x,y)
 
 saved_model = joblib.dump(clf, 'randomForestClassifier.pkl')
 
-# tpot = TPOTClassifier(verbosity=3, 
-#                       scoring="balanced_accuracy", 
-#                       random_state=23, 
-#                       periodic_checkpoint_folder="tpot_mnst1.txt", 
-#                       n_jobs=-1, 
-#                       generations=10, 
-#                       population_size=100)
-# # run three iterations and time them
-# times = []
-# scores = []
-# winning_pipes = []
-
-# for x in range(3):
-#     start_time = timeit.default_timer()
-#     tpot.fit(X_train, y_train)
-#     elapsed = timeit.default_timer() - start_time
-#     times.append(elapsed)
-#     winning_pipes.append(tpot.fitted_pipeline_)
-#     scores.append(tpot.score(X_test, y_test))
-#     tpot.export('tpot_mnist_pipeline.py')
-# times = [time/60 for time in times]
-# print('Times:', times)
-# print('Scores:', scores)   
-# print('Winning pipelines:', winning_pipes)
 
 
