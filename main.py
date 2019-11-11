@@ -37,4 +37,6 @@ if __name__ == "__main__":
 
         classifier_preditions[classifier[0]] = predictions
     
-    classifier_preditions.to_csv('classifier_predictions.csv', index=False)
+    # output_folder = Path(settings.path_for(settings.FILES.OUTPUT_DIRECTORY))
+    output_file = 'classifier_predictions.csv' 
+    classifier_preditions.to_csv(output_file, index=False)

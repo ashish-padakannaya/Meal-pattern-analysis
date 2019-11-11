@@ -1,6 +1,7 @@
 [default.files]
 meal_data_directory = './MealDataFolder'
 models = './Models'
+output_directory = './Outputs/'
 
 [default.features_rfc]
 features = ['maximum', 'mean', 'sd', 'abs_energy', 'fft']
