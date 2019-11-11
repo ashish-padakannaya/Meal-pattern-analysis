@@ -15,7 +15,7 @@ features = ['median', 'mean', 'sd', 'lsam']
 k = 20
 
 [default.features_svm]
-features = ['median', 'mean', 'sd', 'lsam']
+features = ['variance','mean', 'median', 'lsam', 'fft','linear_trend','cam','cbm','skew','sd','mean_change','time']
 k = 20
 
 [default.classifier]
@@ -23,5 +23,6 @@ k_fold = 10
 model_dict = [
     ['randomForestClassifier', 'randomForestClassifier.pkl'],
     ['decisionTreeClassifier', 'decisionTreeClassifier.pkl'],
+    ['supportVectorMachineClassifier', 'decisionTreeClassifier.pkl']
 ]
 
