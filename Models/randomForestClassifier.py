@@ -16,7 +16,7 @@ from sklearn.externals import joblib
 
 from helper import get_meal_vectors
 
-x, y = get_meal_vectors(True, True, False)
+x, y = get_meal_vectors('randomForestClassifier',True, True, False)
 X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
 
 kf = KFold(n_splits=10, shuffle=True)
