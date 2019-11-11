@@ -23,7 +23,7 @@ k_fold = 10
 model_dict = [
     ['randomForestClassifier', 'randomForestClassifier.pkl'],
     ['decisionTreeClassifier', 'decisionTreeClassifier.pkl'],
-    ['supportVectorMachineClassifier', 'supportVectorMachineClassifier.pkl']
-    ['mlpClassifier','mlpClassifier.pkl']
+    ['supportVectorMachineClassifier', 'supportVectorMachineClassifier.pkl'],
+    ['multiLayerPerceptronClassifier','multiLayerPerceptronClassifier.pkl']
 ]
 
