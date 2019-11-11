@@ -28,7 +28,7 @@ def get_range_in_windows(arrayOrg):
     for index in range(arrayLength):
         window = arrayPadded[index: index + windowSize]
         minMinusMax = np.max(window) - np.min(window)
-        rangeArray.append(minMinusMax/arrayOrg.shape[0])
+        rangeArray.append(minMinusMax/windowSize)
 
     np_max = np.max(np.array(rangeArray))
     return np_max
@@ -195,7 +195,6 @@ def generate_features(meal_array, apply_pca=True):
         res = map(get_feature_func(feature), meal_array)
         res = np.array(list(res))
         print("Feature: {} | Size: {}".format(feature, res.shape))
-
 
         if not feature_array.size: feature_array = res
         else: feature_array = np.concatenate((feature_array, res), axis=1)

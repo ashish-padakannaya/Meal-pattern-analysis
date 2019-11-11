@@ -2,7 +2,9 @@
 meal_data_directory = './MealDataFolder'
 
 [default.features]
-features = ['variance','mean', 'median', 'lsam', 'cam','cbm','fft', 'linear_trend','mean_change','time']
+features =  ['variance','mean', 'median', 'lsam', 'fft','linear_trend','cam','cbm','skew','sd','mean_change','time']
+#features =  ['mean','fft','linear_trend', 'cam', 'cbm']
+
 k = 20
 
 [deafult.classifier]
