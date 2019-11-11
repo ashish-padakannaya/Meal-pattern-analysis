@@ -23,7 +23,7 @@ Now install all the required libraries. Make sure you're inside the project dire
   
   # Running instructions
   
-Run program using python or python3
+Run program from inside the project directory using python or python3
 
     python main.py <filename>
 

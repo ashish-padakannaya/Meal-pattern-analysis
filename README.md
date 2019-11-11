@@ -1,24 +1,15 @@
-
+  
 
 # Installation instructions
 
   
 
-After cloning the repository, Make sure you have Python3.
+After cloning the repository, Make sure you have Python3 and pip install.
 
  
 
 -  [https://www.python.org/downloads/](https://www.python.org/downloads/)
-
-
-
-Create a new virtual environment and activate it.
-
-
-  
-
-    python3 -m venv /path/to/new/virtual/environment_name
-    source /path/to/new/virtual/environment_name/bin activate
+ - https://pip.pypa.io/en/stable/installing/
 
 Now install all the required libraries. Make sure you're inside the project directory before running the command.
 
@@ -26,18 +17,38 @@ Now install all the required libraries. Make sure you're inside the project dire
 
     pip install -r requirements.txt
 
-  
+
+  # Pre - running instructions
+  Keep the input data, which is a CSV file, **in the same directory as `main.py`**
   
   # Running instructions
   
-Run program using python or python3
+Run program from inside the project directory using python or python3
 
-    python main.py
+    python main.py <filename>
+
+**For eg.**
+
+    python main.py testsampleinput.csv
+
+filename is the name of the CSV you will put as input for testing data.
 
   # Codebase and outputs
 
 
- 1. Codebase - contains the entire codebase with cgm data, helper functions and config
- 2. Outputs - contains .csv files of feature matrices, PCA feature matrices, PCA eigenvectors and text file for PCA eigenvalues
- 3. Plots - contains folders for the plots for each feature and PCA features
+ 1. Codebase - contains the entire codebase with cgm data, helper functions, classifiers and config.
+ 2. Outputs - are contained in a CSV file predictions.csv containing predicted values of each classifier used, it is in the same directory as `main.py`
+ 
+	 Meal is signified by 1 and No Meal is signified by 0.
+ 
  4. README.pdf - Quick start readme file.
+
+# Average scores for different classifiers with K-Fold Validation:
+
+
+|	|F1 Score	|Accuracy|Recall	|Precision 
+|--|--|--|--|--|
+|Decision Tree| 69.15 | 67.15 |70.19|70.38|
+|Multilayer Perceptron| 73.14 |70.26  |72.43|75.36|
+|Random Forest|69.5|69.27|67.05|71.86|
+|Support Vector Machine| 65.59 |66.33|63.98|67.12|
