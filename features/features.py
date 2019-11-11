@@ -175,7 +175,7 @@ def get_feature_func(feature_name):
     return feature_to_function_map[feature_name]
 
 
-def generate_features(meal_array, apply_pca=True, load_pca = False):
+def generate_features(model_name, meal_array, apply_pca=True, load_pca = False):
     """generates features from meal array data
     
     Arguments:
@@ -201,6 +201,6 @@ def generate_features(meal_array, apply_pca=True, load_pca = False):
         else: feature_array = np.concatenate((feature_array, res), axis=1)
 
     if apply_pca:
-        feature_array = get_pca_vectors(feature_array, k, load_pca)
+        feature_array = get_pca_vectors(model_name, feature_array, k, load_pca)
 
     return feature_array
