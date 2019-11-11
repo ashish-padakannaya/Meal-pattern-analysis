@@ -39,7 +39,7 @@ if __name__ == "__main__":
         precscores.append(precision_score(test_labels, pred_labels))
         recallscores.append(recall_score(test_labels, pred_labels))
     
-    saved_model = joblib.dump(k, 'mlpClassifier.pkl')
+    saved_model = joblib.dump(k, 'multiLayerPerceptronClassifier.pkl')
 
     # Print the scores
     print("F1 Scores: " , str(round(np.mean(f1scores)*100, 2)),"%")

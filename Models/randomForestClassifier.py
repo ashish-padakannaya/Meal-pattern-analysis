@@ -16,7 +16,7 @@ from sklearn.externals import joblib
 
 from helper import get_meal_vectors
 
-x, y = get_meal_vectors('randomForestClassifier',True, True, False)
+x, y = get_meal_vectors('randomForestClassifier',apply_pca=True, padding=True, load_pca=False)
 X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
 
 kf = KFold(n_splits=10, shuffle=True)
@@ -41,10 +41,11 @@ for train_index, test_index in kf.split(x):
     clf.fit(train_data,train_labels)
     y_pred=clf.predict(test_data)
 
-    scores.append(f1_score(test_labels, y_pred))
-
+scores.append(f1_score(test_labels, y_pred))
 
 print("mean scores - " + str(np.mean(scores)))
+
+clf.fit(x,y)
 
 saved_model = joblib.dump(clf, 'randomForestClassifier.pkl')
 

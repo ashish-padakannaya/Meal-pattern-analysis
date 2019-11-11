@@ -24,6 +24,6 @@ model_dict = [
     ['randomForestClassifier', 'randomForestClassifier.pkl'],
     ['decisionTreeClassifier', 'decisionTreeClassifier.pkl'],
     ['supportVectorMachineClassifier', 'supportVectorMachineClassifier.pkl'],
-    ['mlpClassifier','mlpClassifier.pkl']
+    ['multiLayerPerceptronClassifier','multiLayerPerceptronClassifier.pkl']
 ]
 
