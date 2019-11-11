@@ -15,8 +15,8 @@ if __name__ == "__main__":
     filename = sys.argv[1]
     meal_data_np = []
     print("loading file - " + filename)
-    predictions_array = []
     meal_data = pd.read_csv(os.path.join(filename), na_filter = False, header = None, sep = '\n')
+
     for i,_ in enumerate(meal_data.iterrows()):
             t = helper.getFloatFromObjectForMealData(meal_data.loc[i])
             if t.size != 0: 
@@ -26,16 +26,15 @@ if __name__ == "__main__":
 
     directory = Path(settings.path_for(settings.FILES.MODELS))
     directory = str(directory)
-
     model_dict = list(settings.CLASSIFIER.MODEL_DICT)
-    print(model_dict)
 
+    classifier_preditions = pd.DataFrame()
     for classifier in model_dict:
         filename = classifier[1]
         model = joblib.load(os.path.join(directory, filename))
         meal_vectors, labels = get_meal_vectors(classifier[0],True,False,True)
         predictions = model.predict(meal_vectors)
 
-        predictions_array.append(predictions)
+        classifier_preditions[classifier[0]] = predictions
     
-    print(predictions_array)
+    classifier_preditions.to_csv('classifier_predictions.csv', index=False)

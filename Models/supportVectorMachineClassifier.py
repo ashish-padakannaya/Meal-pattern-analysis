@@ -29,8 +29,6 @@ def trainSVM(trainingData, labels):
         for train_index, test_index in kf.split(trainingData):
             counter += 1
             svclassifier.fit(trainingData[train_index], labels[train_index])
-            # gnb = GaussianNB()
-            # gnb.fit(trainingData[train_index], labels[train_index])
             f1Score, acc, pres, rec = getAccuracy(svclassifier, trainingData[test_index], labels[test_index])
             f1List.append(f1Score)
             accuracyList.append(acc)
@@ -39,9 +37,7 @@ def trainSVM(trainingData, labels):
 
     svclassifierTotal = SVC(kernel='linear')
     svclassifierTotal.fit(trainingData, labels)
-    saved_model = joblib.dump(svclassifierTotal, 'supportVectorMachineClassifier.pkl')
-    # totalPreds = svclassifier.predict(trainingData)
-    # print("Accuracy on total data: {}%".format(accuracy_score(labels, totalPreds)))
+    joblib.dump(svclassifierTotal, 'supportVectorMachineClassifier.pkl')
 
     print("-------------------------------------------------------------------")
     print("Accuracy: {}%".format(round(100 * sum(accuracyList)/len(accuracyList), 2)))
