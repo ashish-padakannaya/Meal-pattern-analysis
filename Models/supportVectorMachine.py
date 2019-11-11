@@ -47,5 +47,5 @@ def trainSVM(trainingData, labels):
 
 
 if __name__ == "__main__":
-    data, labels = get_meal_vectors('supportVectorMachine')
+    data, labels = get_meal_vectors('supportVectorMachineClassifier')
     trainSVM(data, labels)

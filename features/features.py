@@ -234,7 +234,7 @@ def generate_features(model_name, meal_array, apply_pca=True, load_pca = False):
     if model_name == "multiLayerPerceptronClassifier":
         k = int(settings.FEATURES_MLP.K)
         features = list(settings.FEATURES_MLP.FEATURES)
-    if model_name == "supportVectorMachine":
+    if model_name == "supportVectorMachineClassifier":
         k = int(settings.FEATURES_SVM.K)
         features = list(settings.FEATURES_SVM.FEATURES)
     
