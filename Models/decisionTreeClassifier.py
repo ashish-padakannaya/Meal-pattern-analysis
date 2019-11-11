@@ -38,11 +38,13 @@ if __name__ == "__main__":
         precscores.append(precision_score(test_labels, pred_labels))
         recallscores.append(recall_score(test_labels, pred_labels))
 
-
-    saved_model = joblib.dump(k, 'decisionTreeClassifier.pkl')
-
     # Print the scores
+    print("Score for Decision Tree")
     print("F1 Scores: " , str(round(np.mean(f1scores)*100, 2)),"%")
     print("Accuracy Scores: " ,str(round(np.mean(accscores)*100, 2)),"%") 
     print("Precision Scores: " ,str(round(np.mean(precscores)*100, 2)),"%") 
     print("Recall Scores: " , str(round(np.mean(recallscores)*100, 2)),"%") 
+
+    #fit all the data
+    k.fit(data, labels)
+    joblib.dump(k, 'decisionTreeClassifier.pkl')
