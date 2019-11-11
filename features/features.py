@@ -2,7 +2,7 @@ import pandas as pd
 from tsfresh.feature_extraction.feature_calculators import \
 standard_deviation, fft_aggregated,  longest_strike_above_mean, linear_trend, \
 count_above_mean, count_below_mean, time_reversal_asymmetry_statistic, skewness, variance, mean, median, \
-mean_change
+mean_change, maximum, abs_energy, absolute_sum_of_changes, kurtosis, ratio_beyond_r_sigma, mean_abs_change
 import numpy as np
 from dynaconf import settings
 from ast import literal_eval
@@ -74,6 +74,30 @@ def get_fft(arr):
     
     return res
 
+def get_ratio_beyond_r_sigma(arr):
+    res = np.array([ratio_beyond_r_sigma(arr)])
+    res = np.nan_to_num(res)
+    return res
+
+def get_kurtosis(arr):
+    res = np.array([kurtosis(arr)])
+    res = np.nan_to_num(res)
+    return res
+
+def get_absolute_sum_of_changes(arr):
+    res = np.array([absolute_sum_of_changes(arr)])
+    res = np.nan_to_num(res)
+    return res
+
+def get_abs_energy(arr):
+    res = np.array([abs_energy(arr)])
+    res = np.nan_to_num(res)
+    return res
+
+def get_maximum(arr):
+    res = np.array([maximum(arr)])
+    res = np.nan_to_num(res)
+    return res
 
 def get_median(arr):
     res = np.array([median(arr)])
@@ -146,6 +170,11 @@ def get_skew(arr):
     res = np.nan_to_num(res)
     return res
 
+def get_mean_abs_change(arr):
+    res = np.array([mean_abs_change(arr)])
+    res = np.nan_to_num(res)
+    return res
+
 def get_feature_func(feature_name):
     """Dynamically maps feature name to functions
     
@@ -169,7 +198,13 @@ def get_feature_func(feature_name):
         'mean': get_mean,
         'median': get_median,
         'sd': get_sd,
-        'mean_change': get_mean_change
+        'mean_change': get_mean_change,
+        'maximum': get_maximum,
+        'abs_energy':get_abs_energy,
+        'absolute_sum_of_changes': get_absolute_sum_of_changes,
+        'kurtosis': get_kurtosis,
+        'ratio_beyond_r_sigma': get_ratio_beyond_r_sigma,
+        'mean_abs_change': get_mean_abs_change
     }
 
     return feature_to_function_map[feature_name]
@@ -187,9 +222,21 @@ def generate_features(model_name, meal_array, apply_pca=True, load_pca = False):
     Returns:
         np.array -- 2D numpy array of meal data features
     """
-    k = int(settings.FEATURES.K)
-    features = list(settings.FEATURES.FEATURES)
+    print(model_name)
     feature_array = np.array([])
+
+    if model_name == "randomForestClassifier":
+        k = int(settings.FEATURES_RFC.K)
+        features = list(settings.FEATURES_RFC.FEATURES)
+    if model_name == "decisionTreeClassifier":
+        k = int(settings.FEATURES_DTC.K)
+        features = list(settings.FEATURES_DTC.FEATURES)
+    if model_name == "multiLayerPerceptronClassifier":
+        k = int(settings.FEATURES_MLP.K)
+        features = list(settings.FEATURES_MLP.FEATURES)
+    if model_name == "supportVectorMachine":
+        k = int(settings.FEATURES_SVM.K)
+        features = list(settings.FEATURES_SVM.FEATURES)
     
     for feature in features:
         res = map(get_feature_func(feature), meal_array)

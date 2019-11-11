@@ -37,7 +37,7 @@ if __name__ == "__main__":
         accscores.append(accuracy_score(test_labels, pred_labels))
         precscores.append(precision_score(test_labels, pred_labels))
         recallscores.append(recall_score(test_labels, pred_labels))
-    
+
 
     saved_model = joblib.dump(k, 'decisionTreeClassifier.pkl')
 

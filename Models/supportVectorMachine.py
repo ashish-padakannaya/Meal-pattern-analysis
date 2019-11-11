@@ -1,9 +1,15 @@
+import sys
+sys.path.append('../')
+from helper import get_meal_vectors
 import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.svm import SVC
 import random
 from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score
 from sklearn.naive_bayes import GaussianNB
+
+from sklearn.externals import joblib
+
 
 def getAccuracy(svmModel, testData, testGt):
     preds = svmModel.predict(testData)
@@ -18,11 +24,10 @@ def trainSVM(trainingData, labels):
     accuracyList = []
     presList = []
     recallList = []
+    svclassifier = SVC(kernel='linear')
     for _ in range(1):
         for train_index, test_index in kf.split(trainingData):
             counter += 1
-
-            svclassifier = SVC(kernel='linear')
             svclassifier.fit(trainingData[train_index], labels[train_index])
             # gnb = GaussianNB()
             # gnb.fit(trainingData[train_index], labels[train_index])
@@ -32,8 +37,15 @@ def trainSVM(trainingData, labels):
             presList.append(pres)
             recallList.append(rec)
 
+    saved_model = joblib.dump(svclassifier, 'supportVectorMachineClassifier.pkl')
+
     print("-------------------------------------------------------------------")
-    print("Accuracy: {}".format(sum(accuracyList)/len(accuracyList)))
-    print("F1: {}".format(sum(f1List) / len(f1List)))
-    print("Precision: {}".format(sum(presList) / len(presList)))
-    print("Recall: {}".format(sum(recallList) / len(recallList)))
+    print("Accuracy: {}%".format(round(100 * sum(accuracyList)/len(accuracyList), 2)))
+    print("F1: {}%".format(round(100 * sum(f1List) / len(f1List), 2)))
+    print("Precision: {}%".format(round(100 * sum(presList) / len(presList), 2)))
+    print("Recall: {}%".format(round(100 * sum(recallList) / len(recallList), 2)))
+
+
+if __name__ == "__main__":
+    data, labels = get_meal_vectors('supportVectorMachine')
+    trainSVM(data, labels)
