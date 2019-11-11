@@ -43,7 +43,7 @@ if __name__ == "__main__":
     for classifier in model_dict:
         filename = classifier[1]
         model = joblib.load(os.path.join(directory, filename))
-        meal_vectors, labels = get_meal_vectors(True,False,True)
+        meal_vectors, labels = get_meal_vectors(classifier[0],True,False,True)
         predictions = model.predict(meal_vectors)
 
         predictions_array.append(predictions)

@@ -5,7 +5,7 @@ from pathlib import Path
 from dynaconf import settings
 import os
 
-def get_pca_vectors(vectors, k, load_pca):
+def get_pca_vectors(model_name, vectors, k, load_pca):
     """generates k PCA vectors 
     
     Arguments:
@@ -21,8 +21,8 @@ def get_pca_vectors(vectors, k, load_pca):
     
     k = min(k, vectors.shape[1])
     if load_pca:
-        std_scaler = joblib.load(os.path.join(directory, 'std_scaler.pkl'))
-        pca = joblib.load(os.path.join(directory, 'pca.pkl'))
+        std_scaler = joblib.load(os.path.join(directory, model_name + '_std_scaler.pkl'))
+        pca = joblib.load(os.path.join(directory, model_name + '_pca.pkl'))
     else:
         std_scaler = StandardScaler()
         pca = PCA(n_components=k)
@@ -31,8 +31,8 @@ def get_pca_vectors(vectors, k, load_pca):
     pca_vectors = pca.fit_transform(scaled_values)
     print("Total variance accounted for: ", sum(pca.explained_variance_ratio_))
     if not load_pca:
-        joblib.dump(pca, 'pca.pkl')
-        joblib.dump(std_scaler, 'std_scaler.pkl')
+        joblib.dump(pca, model_name + '_pca.pkl')
+        joblib.dump(std_scaler, model_name + '_std_scaler.pkl')
 
     return pca_vectors
 

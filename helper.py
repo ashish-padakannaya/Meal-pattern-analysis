@@ -47,9 +47,9 @@ def get_meal_array(padding=False):
     return meal_data_np, class_labels_np
 
 
-def get_meal_vectors(apply_pca=True, padding=False, load_pca = False):
+def get_meal_vectors(model_name, apply_pca=True, padding=False, load_pca = False):
     data, labels = get_meal_array(padding=padding)
-    data = generate_features(data, apply_pca=apply_pca, load_pca=load_pca)
+    data = generate_features(model_name, data, apply_pca=apply_pca, load_pca=load_pca)
     return data, labels
 
 
