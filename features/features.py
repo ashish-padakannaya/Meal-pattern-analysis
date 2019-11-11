@@ -222,7 +222,7 @@ def generate_features(model_name, meal_array, apply_pca=True, load_pca = False):
     Returns:
         np.array -- 2D numpy array of meal data features
     """
-    print(model_name)
+    print("using {} for predicting".format(model_name))
     feature_array = np.array([])
 
     if model_name == "randomForestClassifier":
@@ -241,7 +241,7 @@ def generate_features(model_name, meal_array, apply_pca=True, load_pca = False):
     for feature in features:
         res = map(get_feature_func(feature), meal_array)
         res = np.array(list(res))
-        print("Feature: {} | Size: {}".format(feature, res.shape))
+        # print("Feature: {} | Size: {}".format(feature, res.shape))
 
         if not feature_array.size: feature_array = res
         else: feature_array = np.concatenate((feature_array, res), axis=1)

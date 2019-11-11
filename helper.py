@@ -43,7 +43,7 @@ def get_meal_array(padding=False):
 
     max_len = 0
     for meal_data_file in os.listdir(directory):
-        print("loading file - " + meal_data_file)
+        # print("loading file - " + meal_data_file)
         class_label = 0 if 'Nomeal' in meal_data_file else 1
 
         meal_data = pd.read_csv(os.path.join(directory, meal_data_file), na_filter = False, header = None, sep = '\n')
