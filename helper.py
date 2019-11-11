@@ -8,6 +8,27 @@ from pathlib import Path
 
 from features.features import generate_features
 
+def pad_array(meal_data_np, max_len):
+    """pad array with zeros
+    
+    Arguments:
+        meal_data_np {np.array} -- meal data to pad
+        max_len {int} -- length of longest vector
+    
+    Returns:
+        np.array -- padded numpy array
+    """
+    temp = np.array([])
+    for each in meal_data_np:
+        zeros_to_pad = max_len - len(each)
+        np.pad(each, (0, zeros_to_pad), 'constant')
+        padded_array = np.pad(each, (0, zeros_to_pad), 'constant').reshape(1,-1)
+        if not temp.size:  temp = padded_array
+        else:  temp = np.concatenate((temp, padded_array), axis= 0)
+    meal_data_np = temp
+    return meal_data_np
+
+
 def get_meal_array(padding=False):
     """
     To convert meal data from CSVs in MealDataFolder to a numpy array and a class label array
@@ -34,22 +55,17 @@ def get_meal_array(padding=False):
                 meal_data_np.append(t)
                 class_labels_np.append(class_label)
 
-    if padding and max_len:
-        k = []
-        for each in meal_data_np:
-            k.append( np.pad(each, max_len - len(each)) )
-        meal_data_np = np.array(k)
+    if padding and max_len: pad_array(meal_data_np, max_len)
+    else: meal_data_np = np.array(meal_data_np)
 
-    
-    meal_data_np = np.array(meal_data_np)
     class_labels_np = np.array(class_labels_np)
 
     return meal_data_np, class_labels_np
 
 
-def get_meal_vectors(apply_pca=True, padding=False):
+def get_meal_vectors(model_name, apply_pca=True, padding=False, load_pca = False):
     data, labels = get_meal_array(padding=padding)
-    data = generate_features(data, apply_pca=apply_pca)
+    data = generate_features(model_name, data, apply_pca=apply_pca, load_pca=load_pca)
     return data, labels
 
 
