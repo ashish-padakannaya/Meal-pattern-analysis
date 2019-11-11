@@ -37,7 +37,11 @@ def trainSVM(trainingData, labels):
             presList.append(pres)
             recallList.append(rec)
 
-    saved_model = joblib.dump(svclassifier, 'supportVectorMachineClassifier.pkl')
+    svclassifierTotal = SVC(kernel='linear')
+    svclassifierTotal.fit(trainingData, labels)
+    saved_model = joblib.dump(svclassifierTotal, 'supportVectorMachineClassifier.pkl')
+    # totalPreds = svclassifier.predict(trainingData)
+    # print("Accuracy on total data: {}%".format(accuracy_score(labels, totalPreds)))
 
     print("-------------------------------------------------------------------")
     print("Accuracy: {}%".format(round(100 * sum(accuracyList)/len(accuracyList), 2)))
