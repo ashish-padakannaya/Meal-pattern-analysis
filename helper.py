@@ -55,11 +55,12 @@ def get_meal_array(padding=False):
                 meal_data_np.append(t)
                 class_labels_np.append(class_label)
 
-    if padding and max_len: pad_array(meal_data_np, max_len)
-    else: meal_data_np = np.array(meal_data_np)
+    if padding and max_len: 
+        meal_data_np = pad_array(meal_data_np, max_len)
+    else: 
+        meal_data_np = np.array(meal_data_np)
 
     class_labels_np = np.array(class_labels_np)
-
     return meal_data_np, class_labels_np
 
 
