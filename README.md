@@ -44,13 +44,3 @@ filename is the name of the CSV you will put as input for testing data.
  4. README.pdf - Quick start readme file.
 
 <br/>
-
-# Average scores for different classifiers with K-Fold Validation:
-
-
-|	|F1 Score	|Accuracy|Recall	|Precision 
-|--|--|--|--|--|
-|Decision Tree| 69.15 | 67.15 |70.19|70.38|
-|Multilayer Perceptron| 73.14 |70.26  |72.43|75.36|
-|Random Forest|69.5|69.27|67.05|71.86|
-|Support Vector Machine| 65.59 |66.33|63.98|67.12|
